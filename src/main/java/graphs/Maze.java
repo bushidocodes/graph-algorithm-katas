@@ -84,4 +84,8 @@ public class Maze {
         }
     }
 
+    // This method is a wrapper method to fulfill the exact kata requirements.
+    public String canTraverseYesNo(int[] start, int[] end) {
+        return canTraverse(start, end) ? "YES" : "NO";
+    }
 }

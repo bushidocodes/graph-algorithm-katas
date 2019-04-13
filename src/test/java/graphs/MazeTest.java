@@ -98,4 +98,35 @@ public class MazeTest {
         int[] end3 = { 4, 0 };
         assertTrue(myMaze3.canTraverse(start3, end3));
     }
+
+    @Test
+    public void secondMazeWithYesNo() {
+        int[][] mazePattern =
+
+                {
+
+                        { 0, 0, 0, 1, 0 },
+
+                        { 1, 0, 0, 1, 1 },
+
+                        { 0, 0, 0, 1, 0 },
+
+                        { 1, 0, 1, 0, 0 },
+
+                        { 0, 0, 1, 0, 0 }
+
+                };
+        Maze myMaze = new Maze(mazePattern);
+        int[] start = { 0, 0 };
+        int[] end = { 4, 4 };
+        assertTrue(myMaze.canTraverseYesNo(start, end) == "NO");
+        Maze myMaze2 = new Maze(mazePattern);
+        int[] start2 = { 0, 4 };
+        int[] end2 = { 4, 0 };
+        assertTrue(myMaze2.canTraverseYesNo(start2, end2) == "NO");
+        Maze myMaze3 = new Maze(mazePattern);
+        int[] start3 = { 0, 0 };
+        int[] end3 = { 4, 0 };
+        assertTrue(myMaze3.canTraverseYesNo(start3, end3) == "YES");
+    }
 }
