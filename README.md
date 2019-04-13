@@ -1,5 +1,8 @@
 # Coding Project Graph
 
+## How to Run
+This repo is implemented as a Maven project requiring Java 11. You should be able to add it to your tool of choice using a import from Maven tool. The individual katas each have JUnit tests. Run those to assess my Kata solutions.
+
 ## Number of Islands
 Given a 2d grid map of 1s(land) and 0s(water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
 
