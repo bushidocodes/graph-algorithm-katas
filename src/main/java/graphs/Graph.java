@@ -1,14 +1,12 @@
 package graphs;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Arrays;
 
-// Given a graph G, check if the graph is biconnected or not. If it is not,
-// identify all the articulation points. The algorithm should run in linear
-// time.
+// Adjacency-list graph supporting both directed and undirected edges.
 public class Graph {
-    private HashMap<String, HashSet<String>> adjacencyMatrix = new HashMap<String, HashSet<String>>();
+    private HashMap<String, HashSet<String>> adjacencyList = new HashMap<>();
     boolean isDirected;
 
     public Graph(boolean newIsDirected) {
@@ -16,19 +14,19 @@ public class Graph {
     }
 
     private boolean hasSourceHashSet(String source) {
-        return this.adjacencyMatrix.containsKey(source);
+        return this.adjacencyList.containsKey(source);
     }
 
     private HashSet<String> getSourceHashSet(String source) {
-        return this.adjacencyMatrix.get(source);
+        return this.adjacencyList.get(source);
     }
 
     public void addEdge(String source, String destination) {
         if (!hasSourceHashSet(source)) {
-            this.adjacencyMatrix.put(source, new HashSet<String>());
+            this.adjacencyList.put(source, new HashSet<>());
         }
         getSourceHashSet(source).add(destination);
-        if (this.isDirected == false && this.hasEdge(destination, source) == false) {
+        if (!this.isDirected && !this.hasEdge(destination, source)) {
             this.addEdge(destination, source);
         }
     }
@@ -37,7 +35,7 @@ public class Graph {
         if (this.hasSourceHashSet(source)) {
             getSourceHashSet(source).remove(destination);
         }
-        if (this.isDirected == false && this.hasEdge(destination, source) == true) {
+        if (!this.isDirected && this.hasEdge(destination, source)) {
             this.removeEdge(destination, source);
         }
     }
@@ -54,8 +52,8 @@ public class Graph {
     }
 
     public HashSet<String> getVertices() {
-        HashSet<String> vertices = new HashSet<String>();
-        this.adjacencyMatrix.forEach((source, destinations) -> {
+        HashSet<String> vertices = new HashSet<>();
+        this.adjacencyList.forEach((source, destinations) -> {
             if (destinations.size() > 0)
                 vertices.add(source);
             destinations.forEach(destination -> vertices.add(destination));
@@ -65,9 +63,8 @@ public class Graph {
 
     public HashSet<String> getNeighbors(String source) {
         if (this.hasSourceHashSet(source))
-            return this.adjacencyMatrix.get(source);
+            return this.adjacencyList.get(source);
         else
-            return new HashSet<String>();
+            return new HashSet<>();
     }
-
 }

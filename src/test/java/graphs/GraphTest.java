@@ -1,15 +1,12 @@
 package graphs;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-/**
- * Unit test for simple App.
- */
 public class GraphTest {
     @Test
     public void canInstantiateUndirectedGraph() {
@@ -27,9 +24,9 @@ public class GraphTest {
     public void canAddEdge() {
         Graph myGraph = new Graph(true);
         myGraph.addEdge("A", "B");
-        assertTrue(myGraph.hasEdge("A", "B") == true);
+        assertTrue(myGraph.hasEdge("A", "B"));
         myGraph.addEdge("A", "C");
-        assertTrue(myGraph.hasEdge("A", "C") == true);
+        assertTrue(myGraph.hasEdge("A", "C"));
     }
 
     @Test
@@ -37,52 +34,51 @@ public class GraphTest {
         Graph myGraph = new Graph(true);
         String[][] edgeList = { { "A", "B" }, { "A", "C" } };
         myGraph.addEdgeList(edgeList);
-        assertTrue(myGraph.hasEdge("A", "B") == true);
-        assertTrue(myGraph.hasEdge("A", "C") == true);
+        assertTrue(myGraph.hasEdge("A", "B"));
+        assertTrue(myGraph.hasEdge("A", "C"));
         Graph myUndirectedGraph = new Graph(false);
         myUndirectedGraph.addEdgeList(edgeList);
-        assertTrue(myUndirectedGraph.hasEdge("A", "B") == true);
-        assertTrue(myUndirectedGraph.hasEdge("B", "A") == true);
-        assertTrue(myUndirectedGraph.hasEdge("A", "C") == true);
-        assertTrue(myUndirectedGraph.hasEdge("C", "A") == true);
+        assertTrue(myUndirectedGraph.hasEdge("A", "B"));
+        assertTrue(myUndirectedGraph.hasEdge("B", "A"));
+        assertTrue(myUndirectedGraph.hasEdge("A", "C"));
+        assertTrue(myUndirectedGraph.hasEdge("C", "A"));
     }
 
     @Test
     public void automaticallyAddsOpposingEdgeInUndirectedGraphs() {
         Graph myGraph = new Graph(false);
         myGraph.addEdge("A", "B");
-        assertTrue(myGraph.hasEdge("A", "B") == true);
-        assertTrue(myGraph.hasEdge("B", "A") == true);
+        assertTrue(myGraph.hasEdge("A", "B"));
+        assertTrue(myGraph.hasEdge("B", "A"));
         myGraph.addEdge("A", "C");
-        assertTrue(myGraph.hasEdge("A", "C") == true);
-        assertTrue(myGraph.hasEdge("C", "A") == true);
+        assertTrue(myGraph.hasEdge("A", "C"));
+        assertTrue(myGraph.hasEdge("C", "A"));
     }
 
     @Test
     public void canRemoveEdge() {
         Graph myGraph = new Graph(true);
         myGraph.removeEdge("A", "B");
-        assertTrue(myGraph.hasEdge("A", "B") == false);
+        assertFalse(myGraph.hasEdge("A", "B"));
         myGraph.removeEdge("A", "C");
-        assertTrue(myGraph.hasEdge("A", "C") == false);
+        assertFalse(myGraph.hasEdge("A", "C"));
     }
 
     @Test
     public void automaticallyRemovesOpposingEdgeInUndirectedGraphs() {
         Graph myGraph = new Graph(false);
         myGraph.removeEdge("A", "B");
-        assertTrue(myGraph.hasEdge("A", "B") == false);
-        assertTrue(myGraph.hasEdge("B", "A") == false);
+        assertFalse(myGraph.hasEdge("A", "B"));
+        assertFalse(myGraph.hasEdge("B", "A"));
         myGraph.removeEdge("A", "C");
-        assertTrue(myGraph.hasEdge("A", "C") == false);
-        assertTrue(myGraph.hasEdge("C", "A") == false);
+        assertFalse(myGraph.hasEdge("A", "C"));
+        assertFalse(myGraph.hasEdge("C", "A"));
     }
 
     @Test
     public void canGetSetOfVertices() {
         Graph myGraph = new Graph(false);
         myGraph.addEdge("A", "B");
-        System.out.println(myGraph.getVertices());
         assertTrue(myGraph.getVertices().contains("A"));
         assertTrue(myGraph.getVertices().contains("B"));
         assertTrue(myGraph.getVertices().size() == 2);

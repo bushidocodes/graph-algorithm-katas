@@ -1,10 +1,11 @@
 package graphs;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BiconnectivityTest {
     @Test
@@ -19,9 +20,8 @@ public class BiconnectivityTest {
         myUndirectedGraph.addEdge("E", "F");
         Biconnectivity biconnectivityChecker = new Biconnectivity(myUndirectedGraph);
         HashSet<String> articulationPoints = biconnectivityChecker.findArticulationPoints();
-        System.out.println(articulationPoints);
         assertTrue(articulationPoints.contains("D"));
-        assertTrue(articulationPoints.size() == 1);
+        assertEquals(1, articulationPoints.size());
     }
 
     @Test
@@ -33,6 +33,6 @@ public class BiconnectivityTest {
         myUndirectedGraph.addEdge("C", "F");
         myUndirectedGraph.addEdge("E", "F");
         Biconnectivity biconnectivityChecker = new Biconnectivity(myUndirectedGraph);
-        assertTrue(biconnectivityChecker.findArticulationPoints().size() == 0);
+        assertTrue(biconnectivityChecker.findArticulationPoints().isEmpty());
     }
 }

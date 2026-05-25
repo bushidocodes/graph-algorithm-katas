@@ -1,38 +1,33 @@
 package graphs;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-/**
- * Unit test for simple App.
- */
 public class NumberOfIslandsTest {
-    private static int wakka(String landscape) {
-        NumberOfIslands islandCounter = new NumberOfIslands(landscape);
-        int islandCount = islandCounter.countIslands();
-        return islandCount;
+    private static int count(String landscape) {
+        return new NumberOfIslands(landscape).countIslands();
     }
 
     @Test
     public void emptyStringProcesses() {
-        assertTrue(wakka("") == 0);
+        assertTrue(count("") == 0);
     }
 
     @Test
     public void singleCellProcesses() {
-        assertTrue(wakka("1") == 1);
+        assertTrue(count("1") == 1);
     }
 
     @Test
     public void singleRowProcesses() {
-        assertTrue(wakka(String.join(System.getProperty("line.separator"), "111")) == 1);
-        assertTrue(wakka(String.join(System.getProperty("line.separator"), "101")) == 2);
+        assertTrue(count(String.join(System.getProperty("line.separator"), "111")) == 1);
+        assertTrue(count(String.join(System.getProperty("line.separator"), "101")) == 2);
     }
 
     @Test
     public void multiRowProcesses() {
-        assertTrue(wakka(String.join(System.getProperty("line.separator"),
+        assertTrue(count(String.join(System.getProperty("line.separator"),
 
                 "11000",
 

@@ -8,19 +8,18 @@ import java.util.stream.Collectors;
 
 // Given a graph G, check if the graph is biconnected or not. If it is not,
 // identify all the articulation points. The algorithm should run in linear
-// time.                         
+// time.
 public class Biconnectivity {
     Graph g;
-    HashSet<String> articulationPoints = new HashSet<String>();
+    HashSet<String> articulationPoints = new HashSet<>();
     HashSet<String> vertices;
-    HashMap<String, Boolean> isDiscovered = new HashMap<String, Boolean>();
-    HashMap<String, String> parents = new HashMap<String, String>();
-    HashMap<String, Integer> orderVisited = new HashMap<String, Integer>();
-    HashMap<String, Integer> orderReachableByFirstBackedge = new HashMap<String, Integer>();
+    HashMap<String, Boolean> isDiscovered = new HashMap<>();
+    HashMap<String, Integer> orderVisited = new HashMap<>();
+    HashMap<String, Integer> orderReachableByFirstBackedge = new HashMap<>();
     int step = 0;
-    HashMap<String, HashSet<String>> spanningTree = new HashMap<String, HashSet<String>>();
+    HashMap<String, HashSet<String>> spanningTree = new HashMap<>();
     String spanningTreeRoot;
-    HashMap<String, HashSet<String>> backedges = new HashMap<String, HashSet<String>>();
+    HashMap<String, HashSet<String>> backedges = new HashMap<>();
 
     public Biconnectivity(Graph newGraph) {
         this.g = newGraph;
@@ -38,7 +37,7 @@ public class Biconnectivity {
             this.vertices.forEach(v -> {
                 this.orderReachableByFirstBackedge.put(v, this.findOrderReachableByFirstBackedge(v));
             });
-            this.collectAriculationPoints(this.spanningTreeRoot);
+            this.collectArticulationPoints(this.spanningTreeRoot);
         }
 
         return this.articulationPoints;
@@ -67,16 +66,14 @@ public class Biconnectivity {
 
     private void buildSpanningTreeAndBackEdgesProcessEdge(String currentVertex, String neighbor) {
         if (notOppositeEdgeInUndirectedGraph(currentVertex, neighbor)) {
-            // If the edge has already been visited, but it isn't the opposite edge in an
-            // undirected graph, add it as a backedge
             if (this.isDiscovered.get(neighbor)) {
                 if (!this.backedges.containsKey(currentVertex)) {
-                    this.backedges.put(currentVertex, new HashSet<String>());
+                    this.backedges.put(currentVertex, new HashSet<>());
                 }
                 this.backedges.get(currentVertex).add(neighbor);
             } else {
                 if (!this.spanningTree.containsKey(currentVertex)) {
-                    this.spanningTree.put(currentVertex, new HashSet<String>());
+                    this.spanningTree.put(currentVertex, new HashSet<>());
                 }
                 this.spanningTree.get(currentVertex).add(neighbor);
             }
@@ -92,28 +89,22 @@ public class Biconnectivity {
     // in the first level with a backedge or Int.MAX_VALUE if no backedges are
     // found.
     private int findOrderReachableByFirstBackedge(String sourceVertex) {
-        HashSet<String> currentLevel = new HashSet<String>();
+        HashSet<String> currentLevel = new HashSet<>();
         int result = Integer.MAX_VALUE;
         currentLevel.add(sourceVertex);
         while (currentLevel.size() > 0 && result == Integer.MAX_VALUE) {
             List<Integer> earliestBackEdgesInCurrent = currentLevel.stream()
-
                     .filter(v -> this.backedges.containsKey(v))
-
                     .map(v -> this.getEarliestBackedgeFromVertex(v))
-
                     .collect(Collectors.toList());
 
             if (earliestBackEdgesInCurrent.size() > 0) {
                 result = Collections.min(earliestBackEdgesInCurrent);
             } else {
                 currentLevel = currentLevel.stream()
-
                         .filter(v -> this.spanningTree.containsKey(v))
-
                         .map(v -> this.spanningTree.get(v))
-
-                        .reduce(new HashSet<String>(), (setA, setB) -> {
+                        .reduce(new HashSet<>(), (setA, setB) -> {
                             setA.addAll(setB);
                             return setA;
                         });
@@ -125,17 +116,12 @@ public class Biconnectivity {
     // Assumes that the source vertex has a backedge
     int getEarliestBackedgeFromVertex(String sourceVertex) {
         return Collections.min(
-
                 this.backedges.get(sourceVertex).stream()
-
                         .map(dest -> this.orderVisited.get(dest))
-
-                        .collect(Collectors.toList())
-
-        );
+                        .collect(Collectors.toList()));
     }
 
-    public void collectAriculationPoints(String parent) {
+    public void collectArticulationPoints(String parent) {
         if (this.spanningTree.containsKey(parent)) {
             this.spanningTree.get(parent).forEach(child -> {
                 // If the child is not a leaf and L[v] >= d[u], parent is an articulation point
@@ -145,17 +131,16 @@ public class Biconnectivity {
                     this.articulationPoints.add(parent);
                 }
 
-                this.collectAriculationPoints(child);
+                this.collectArticulationPoints(child);
             });
         }
     }
 
     private boolean notRoot(String currentVertex) {
-        return currentVertex.equals(this.spanningTreeRoot) == false;
+        return !currentVertex.equals(this.spanningTreeRoot);
     }
 
     private boolean notLeaf(String neighbor) {
         return this.spanningTree.containsKey(neighbor);
     }
-
 }
