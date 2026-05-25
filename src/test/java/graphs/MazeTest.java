@@ -1,9 +1,10 @@
 package graphs;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MazeTest {
     @Test
@@ -45,17 +46,11 @@ public class MazeTest {
     @Test
     public void firstMaze() {
         int[][] mazePattern = {
-
                 { 0, 0, 0, 1, 0 },
-
                 { 1, 0, 0, 1, 1 },
-
                 { 0, 0, 0, 1, 0 },
-
                 { 1, 0, 0, 0, 0 },
-
                 { 0, 0, 1, 0, 0 }
-
         };
         Maze myMaze = new Maze(mazePattern);
         int[] start = { 0, 0 };
@@ -65,26 +60,17 @@ public class MazeTest {
         int[] start2 = { 0, 4 };
         int[] end2 = { 4, 0 };
         assertFalse(myMaze2.canTraverse(start2, end2));
-
     }
 
     @Test
     public void secondMaze() {
-        int[][] mazePattern =
-
-                {
-
-                        { 0, 0, 0, 1, 0 },
-
-                        { 1, 0, 0, 1, 1 },
-
-                        { 0, 0, 0, 1, 0 },
-
-                        { 1, 0, 1, 0, 0 },
-
-                        { 0, 0, 1, 0, 0 }
-
-                };
+        int[][] mazePattern = {
+                { 0, 0, 0, 1, 0 },
+                { 1, 0, 0, 1, 1 },
+                { 0, 0, 0, 1, 0 },
+                { 1, 0, 1, 0, 0 },
+                { 0, 0, 1, 0, 0 }
+        };
         Maze myMaze = new Maze(mazePattern);
         int[] start = { 0, 0 };
         int[] end = { 4, 4 };
@@ -101,32 +87,24 @@ public class MazeTest {
 
     @Test
     public void secondMazeWithYesNo() {
-        int[][] mazePattern =
-
-                {
-
-                        { 0, 0, 0, 1, 0 },
-
-                        { 1, 0, 0, 1, 1 },
-
-                        { 0, 0, 0, 1, 0 },
-
-                        { 1, 0, 1, 0, 0 },
-
-                        { 0, 0, 1, 0, 0 }
-
-                };
+        int[][] mazePattern = {
+                { 0, 0, 0, 1, 0 },
+                { 1, 0, 0, 1, 1 },
+                { 0, 0, 0, 1, 0 },
+                { 1, 0, 1, 0, 0 },
+                { 0, 0, 1, 0, 0 }
+        };
         Maze myMaze = new Maze(mazePattern);
         int[] start = { 0, 0 };
         int[] end = { 4, 4 };
-        assertTrue(myMaze.canTraverseYesNo(start, end) == "NO");
+        assertEquals("NO", myMaze.canTraverseYesNo(start, end));
         Maze myMaze2 = new Maze(mazePattern);
         int[] start2 = { 0, 4 };
         int[] end2 = { 4, 0 };
-        assertTrue(myMaze2.canTraverseYesNo(start2, end2) == "NO");
+        assertEquals("NO", myMaze2.canTraverseYesNo(start2, end2));
         Maze myMaze3 = new Maze(mazePattern);
         int[] start3 = { 0, 0 };
         int[] end3 = { 4, 0 };
-        assertTrue(myMaze3.canTraverseYesNo(start3, end3) == "YES");
+        assertEquals("YES", myMaze3.canTraverseYesNo(start3, end3));
     }
 }
