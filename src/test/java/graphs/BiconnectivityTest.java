@@ -25,6 +25,35 @@ public class BiconnectivityTest {
     }
 
     @Test
+    public void shouldReportStarCenterAsArticulationPoint() {
+        // Star X-{A,B,C}: removing X disconnects the leaves
+        Graph star = new Graph(false);
+        star.addEdge("X", "A");
+        star.addEdge("X", "B");
+        star.addEdge("X", "C");
+        Biconnectivity checker = new Biconnectivity(star);
+        HashSet<String> aps = checker.findArticulationPoints();
+        assertTrue(aps.contains("X"));
+        assertEquals(1, aps.size());
+    }
+
+    @Test
+    public void shouldReportInternalPathNodesAsArticulationPoints() {
+        // Path A-B-C-D-E: B, C, D are all articulation points
+        Graph path = new Graph(false);
+        path.addEdge("A", "B");
+        path.addEdge("B", "C");
+        path.addEdge("C", "D");
+        path.addEdge("D", "E");
+        Biconnectivity checker = new Biconnectivity(path);
+        HashSet<String> aps = checker.findArticulationPoints();
+        assertTrue(aps.contains("B"));
+        assertTrue(aps.contains("C"));
+        assertTrue(aps.contains("D"));
+        assertEquals(3, aps.size());
+    }
+
+    @Test
     public void shouldEmptySetWhenBiconnected() {
         Graph myUndirectedGraph = new Graph(false);
         myUndirectedGraph.addEdge("A", "B");

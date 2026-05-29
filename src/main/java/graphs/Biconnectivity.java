@@ -123,10 +123,15 @@ public class Biconnectivity {
 
     public void collectArticulationPoints(String parent) {
         if (this.spanningTree.containsKey(parent)) {
+            // Root is an articulation point iff it has >= 2 spanning-tree children
+            if (!notRoot(parent) && this.spanningTree.get(parent).size() >= 2) {
+                this.articulationPoints.add(parent);
+            }
+
             this.spanningTree.get(parent).forEach(child -> {
-                // If the child is not a leaf and L[v] >= d[u], parent is an articulation point
+                // Non-root parent is an articulation point if low[child] >= disc[parent]
                 // See https://www.youtube.com/watch?v=jFZsDDB0-vo to understand why
-                if (notRoot(parent) && notLeaf(child)
+                if (notRoot(parent)
                         && this.orderReachableByFirstBackedge.get(child) >= this.orderVisited.get(parent)) {
                     this.articulationPoints.add(parent);
                 }
