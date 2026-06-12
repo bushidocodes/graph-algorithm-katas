@@ -54,8 +54,11 @@ public class Graph {
     public HashSet<String> getVertices() {
         HashSet<String> vertices = new HashSet<>();
         this.adjacencyList.forEach((source, destinations) -> {
-            if (destinations.size() > 0)
-                vertices.add(source);
+            // Always include the source, even when its neighbor set is empty.
+            // Removing a vertex's last edge leaves it isolated (degree 0) but it
+            // is still a vertex; dropping it here corrupts the vertex set that
+            // algorithms like Biconnectivity and GraphBipartite derive from it.
+            vertices.add(source);
             destinations.forEach(destination -> vertices.add(destination));
         });
         return vertices;
