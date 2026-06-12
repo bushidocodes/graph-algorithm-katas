@@ -86,6 +86,29 @@ public class MazeTest {
     }
 
     @Test
+    public void canReuseInstanceAcrossMultipleQueries() {
+        int[][] mazePattern = {
+                { 0, 0, 0, 1, 0 },
+                { 1, 0, 0, 1, 1 },
+                { 0, 0, 0, 1, 0 },
+                { 1, 0, 0, 0, 0 },
+                { 0, 0, 1, 0, 0 }
+        };
+        Maze myMaze = new Maze(mazePattern);
+        int[] reachableStart = { 0, 0 };
+        int[] reachableEnd = { 4, 4 };
+        int[] unreachableStart = { 0, 4 };
+        int[] unreachableEnd = { 4, 0 };
+        // Reusing one instance for several queries must give consistent
+        // results. Before visited state was reset per call, the second query
+        // returned a stale answer because cells stayed marked from the first.
+        assertTrue(myMaze.canTraverse(reachableStart, reachableEnd));
+        assertTrue(myMaze.canTraverse(reachableStart, reachableEnd));
+        assertFalse(myMaze.canTraverse(unreachableStart, unreachableEnd));
+        assertTrue(myMaze.canTraverse(reachableStart, reachableEnd));
+    }
+
+    @Test
     public void secondMazeWithYesNo() {
         int[][] mazePattern = {
                 { 0, 0, 0, 1, 0 },
