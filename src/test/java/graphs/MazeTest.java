@@ -17,6 +17,35 @@ public class MazeTest {
     }
 
     @Test
+    public void startEqualsEndOnOpenCellShouldBeTrue() {
+        int[][] mazePattern = { { 0 } };
+        Maze myMaze = new Maze(mazePattern);
+        int[] point = { 0, 0 };
+        assertTrue(myMaze.canTraverse(point, point));
+    }
+
+    @Test
+    public void outOfBoundsEndpointsShouldBeFalse() {
+        int[][] mazePattern = { { 0, 0 } };
+        Maze myMaze = new Maze(mazePattern);
+        int[] inBounds = { 0, 0 };
+        int[] outOfBounds = { 5, 5 };
+        assertFalse(myMaze.canTraverse(outOfBounds, inBounds));
+        assertFalse(myMaze.canTraverse(inBounds, outOfBounds));
+    }
+
+    @Test
+    public void blockedEndpointsShouldBeFalse() {
+        int[][] mazePattern = { { 1, 0, 1 } };
+        Maze myMaze = new Maze(mazePattern);
+        int[] openCell = { 0, 1 };
+        int[] blockedCell = { 0, 0 };
+        // A wall cell is not a valid start or end, regardless of reachability.
+        assertFalse(myMaze.canTraverse(blockedCell, openCell));
+        assertFalse(myMaze.canTraverse(openCell, blockedCell));
+    }
+
+    @Test
     public void twoClosedCellsShouldBeFalse() {
         int[][] mazePattern = { { 1, 1 } };
         Maze myMaze = new Maze(mazePattern);

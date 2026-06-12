@@ -26,6 +26,18 @@ public class NumberOfIslandsTest {
     }
 
     @Test
+    public void allWaterHasNoIslands() {
+        assertTrue(count("00\n00") == 0);
+    }
+
+    @Test
+    public void diagonallyAdjacentLandFormsSeparateIslands() {
+        // Cells touching only at a corner are NOT connected: adjacency is
+        // horizontal/vertical only, so this is two islands, not one.
+        assertTrue(count("10\n01") == 2);
+    }
+
+    @Test
     public void multiRowProcesses() {
         assertTrue(count(String.join(System.getProperty("line.separator"),
 
