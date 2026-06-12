@@ -86,9 +86,12 @@ public class GraphTest {
         assertTrue(myGraph.getVertices().contains("C"));
         assertTrue(myGraph.getVertices().size() == 3);
         myGraph.removeEdge("A", "C");
+        // Removing C's only edge makes it isolated (degree 0), but C is still a
+        // vertex in the graph and must remain in the vertex set.
         assertTrue(myGraph.getVertices().contains("A"));
         assertTrue(myGraph.getVertices().contains("B"));
-        assertTrue(myGraph.getVertices().size() == 2);
+        assertTrue(myGraph.getVertices().contains("C"));
+        assertTrue(myGraph.getVertices().size() == 3);
     }
 
     @Test
