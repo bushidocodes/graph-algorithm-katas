@@ -34,28 +34,37 @@ public class GraphBipartite {
     }
 
     public boolean twoColor() {
-        if (this.vertices.size() > 0) {
-            initializeStart();
-            while (this.frontier.size() > 0 && this.isBipartite) {
-                String currentVertex = this.frontier.poll();
-                this.g.getNeighbors(currentVertex).forEach(neighbor -> {
-                    processEdge(currentVertex, neighbor);
-
-                    if (!this.isDiscovered.get(neighbor)) {
-                        this.isDiscovered.put(neighbor, true);
-                        this.frontier.add(neighbor);
-                    }
-                });
+        // A graph is bipartite only if EVERY connected component is. BFS from a
+        // single start vertex never reaches disconnected components, so an odd
+        // cycle living in a separate component would be missed. Restart BFS from
+        // each still-undiscovered vertex to cover all components.
+        for (String vertex : this.vertices) {
+            if (this.isBipartite && !this.isDiscovered.get(vertex)) {
+                initializeComponent(vertex);
+                traverseComponent();
             }
         }
         return this.isBipartite;
     }
 
-    private void initializeStart() {
-        String start = this.vertices.toArray(new String[0])[0];
+    private void initializeComponent(String start) {
         this.isDiscovered.put(start, true);
         this.frontier.add(start);
         this.vertexColors.put(start, "WHITE");
+    }
+
+    private void traverseComponent() {
+        while (this.frontier.size() > 0 && this.isBipartite) {
+            String currentVertex = this.frontier.poll();
+            this.g.getNeighbors(currentVertex).forEach(neighbor -> {
+                processEdge(currentVertex, neighbor);
+
+                if (!this.isDiscovered.get(neighbor)) {
+                    this.isDiscovered.put(neighbor, true);
+                    this.frontier.add(neighbor);
+                }
+            });
+        }
     }
 
     private void processEdge(String currentVertex, String neighbor) {
