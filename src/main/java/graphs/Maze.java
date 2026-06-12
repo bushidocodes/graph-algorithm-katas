@@ -57,6 +57,18 @@ public class Maze {
     }
 
     public boolean canTraverse(int[] start, int[] end) {
+        // Reset visited state up front so a single Maze instance can answer
+        // multiple queries. canTraverse delegates to the recursive traverse
+        // helper, which must NOT clear visited itself -- doing so on every
+        // recursive call would re-explore cells endlessly and overflow the
+        // stack.
+        for (Boolean[] row : this.visited) {
+            Arrays.fill(row, false);
+        }
+        return traverse(start, end);
+    }
+
+    private boolean traverse(int[] start, int[] end) {
         if (!isValid(start) || !isTraversable(start) || !isValid(end) || !isTraversable(end)) {
             return false;
         }
@@ -66,7 +78,7 @@ public class Maze {
             return true;
         } else {
             visited[x][y] = true;
-            return this.getPossibleMoves(start).map(coords -> this.canTraverse(coords, end))
+            return this.getPossibleMoves(start).map(coords -> this.traverse(coords, end))
                     .collect(Collectors.toList()).contains(true);
         }
     }
