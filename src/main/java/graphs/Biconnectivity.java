@@ -105,11 +105,8 @@ public class Biconnectivity {
             } else {
                 currentLevel = currentLevel.stream()
                         .filter(v -> this.spanningTree.containsKey(v))
-                        .map(v -> this.spanningTree.get(v))
-                        .reduce(new HashSet<>(), (setA, setB) -> {
-                            setA.addAll(setB);
-                            return setA;
-                        });
+                        .flatMap(v -> this.spanningTree.get(v).stream())
+                        .collect(Collectors.toCollection(HashSet::new));
             }
         }
         return result;
