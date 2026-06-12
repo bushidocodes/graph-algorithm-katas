@@ -18,7 +18,7 @@ public class Biconnectivity {
     HashMap<String, Integer> orderReachableByFirstBackedge = new HashMap<>();
     int step = 0;
     HashMap<String, HashSet<String>> spanningTree = new HashMap<>();
-    String spanningTreeRoot;
+    HashSet<String> spanningTreeRoots = new HashSet<>();
     HashMap<String, HashSet<String>> backedges = new HashMap<>();
 
     public Biconnectivity(Graph newGraph) {
@@ -31,21 +31,23 @@ public class Biconnectivity {
     }
 
     public HashSet<String> findArticulationPoints() {
-        if (this.vertices.size() > 0) {
-            this.initializeStart();
-            this.buildSpanningTreeAndBackEdges(this.spanningTreeRoot);
-            this.vertices.forEach(v -> {
-                this.orderReachableByFirstBackedge.put(v, this.findOrderReachableByFirstBackedge(v));
-            });
-            this.collectArticulationPoints(this.spanningTreeRoot);
+        // Build a DFS spanning tree for every connected component. A disconnected
+        // graph's articulation points are the union of each component's, so we
+        // start a fresh DFS from every still-undiscovered vertex; starting from a
+        // single root would ignore all other components.
+        for (String vertex : this.vertices) {
+            if (!this.isDiscovered.get(vertex)) {
+                this.spanningTreeRoots.add(vertex);
+                this.isDiscovered.put(vertex, true);
+                this.buildSpanningTreeAndBackEdges(vertex);
+            }
         }
+        this.vertices.forEach(v -> {
+            this.orderReachableByFirstBackedge.put(v, this.findOrderReachableByFirstBackedge(v));
+        });
+        this.spanningTreeRoots.forEach(this::collectArticulationPoints);
 
         return this.articulationPoints;
-    }
-
-    private void initializeStart() {
-        this.spanningTreeRoot = this.vertices.toArray(new String[0])[0];
-        this.isDiscovered.put(this.spanningTreeRoot, true);
     }
 
     public void buildSpanningTreeAndBackEdges(String currentVertex) {
@@ -142,7 +144,7 @@ public class Biconnectivity {
     }
 
     private boolean notRoot(String currentVertex) {
-        return !currentVertex.equals(this.spanningTreeRoot);
+        return !this.spanningTreeRoots.contains(currentVertex);
     }
 
     private boolean notLeaf(String neighbor) {

@@ -1,6 +1,7 @@
 package graphs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
@@ -51,6 +52,57 @@ public class BiconnectivityTest {
         assertTrue(aps.contains("C"));
         assertTrue(aps.contains("D"));
         assertEquals(3, aps.size());
+    }
+
+    @Test
+    public void shouldFindArticulationPointsInEveryComponentOfDisconnectedGraph() {
+        // Two disjoint paths; each has one internal articulation point.
+        Graph g = new Graph(false);
+        g.addEdge("A", "B");
+        g.addEdge("B", "C"); // path A-B-C, B is an articulation point
+        g.addEdge("D", "E");
+        g.addEdge("E", "F"); // path D-E-F, E is an articulation point
+        Biconnectivity checker = new Biconnectivity(g);
+        HashSet<String> aps = checker.findArticulationPoints();
+        // A single-component search would return only B or only E depending on
+        // which component it started in; both must be found.
+        assertTrue(aps.contains("B"));
+        assertTrue(aps.contains("E"));
+        assertEquals(2, aps.size());
+    }
+
+    @Test
+    public void shouldIgnoreBiconnectedComponentWhenSearchingDisconnectedGraph() {
+        Graph g = new Graph(false);
+        // Biconnected triangle X-Y-Z: no articulation points
+        g.addEdge("X", "Y");
+        g.addEdge("Y", "Z");
+        g.addEdge("Z", "X");
+        // Path P-Q-R in a separate component: Q is an articulation point
+        g.addEdge("P", "Q");
+        g.addEdge("Q", "R");
+        Biconnectivity checker = new Biconnectivity(g);
+        HashSet<String> aps = checker.findArticulationPoints();
+        assertTrue(aps.contains("Q"));
+        assertEquals(1, aps.size());
+    }
+
+    @Test
+    public void shouldHandleIsolatedVerticesWithoutCrashing() {
+        Graph g = new Graph(false);
+        g.addEdge("A", "B");
+        g.addEdge("B", "C"); // path A-B-C, B is an articulation point
+        // Create isolated vertices (degree 0) by adding then removing an edge.
+        g.addEdge("ISO", "TEMP");
+        g.removeEdge("ISO", "TEMP");
+        Biconnectivity checker = new Biconnectivity(g);
+        HashSet<String> aps = checker.findArticulationPoints();
+        // Isolated vertices are their own single-vertex components and are never
+        // articulation points; the path's articulation point is still found.
+        assertTrue(aps.contains("B"));
+        assertFalse(aps.contains("ISO"));
+        assertFalse(aps.contains("TEMP"));
+        assertEquals(1, aps.size());
     }
 
     @Test
