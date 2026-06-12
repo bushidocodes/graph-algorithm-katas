@@ -107,4 +107,51 @@ public class GraphTest {
         assertFalse(neighbors.contains("E"));
         assertTrue(neighbors.size() == 3);
     }
+
+    @Test
+    public void directedEdgeIsOneWay() {
+        Graph myDirectedGraph = new Graph(true);
+        myDirectedGraph.addEdge("A", "B");
+        assertTrue(myDirectedGraph.hasEdge("A", "B"));
+        // In a directed graph the reverse edge is NOT created automatically.
+        assertFalse(myDirectedGraph.hasEdge("B", "A"));
+    }
+
+    @Test
+    public void removingDirectedEdgeLeavesReverseEdgeIntact() {
+        Graph myDirectedGraph = new Graph(true);
+        myDirectedGraph.addEdge("A", "B");
+        myDirectedGraph.addEdge("B", "A");
+        myDirectedGraph.removeEdge("A", "B");
+        // Only the given direction is removed; the opposing edge survives.
+        assertFalse(myDirectedGraph.hasEdge("A", "B"));
+        assertTrue(myDirectedGraph.hasEdge("B", "A"));
+    }
+
+    @Test
+    public void getVerticesIncludesDestinationOnlyVertices() {
+        Graph myDirectedGraph = new Graph(true);
+        myDirectedGraph.addEdge("A", "B");
+        // B only ever appears as a destination, never as a source key, but it
+        // is still a vertex of the graph.
+        assertTrue(myDirectedGraph.getVertices().contains("A"));
+        assertTrue(myDirectedGraph.getVertices().contains("B"));
+        assertTrue(myDirectedGraph.getVertices().size() == 2);
+    }
+
+    @Test
+    public void getNeighborsReturnsEmptySetForUnknownVertex() {
+        Graph myGraph = new Graph(false);
+        myGraph.addEdge("A", "B");
+        assertTrue(myGraph.getNeighbors("Z").isEmpty());
+    }
+
+    @Test
+    public void duplicateEdgeIsStoredOnce() {
+        Graph myDirectedGraph = new Graph(true);
+        myDirectedGraph.addEdge("A", "B");
+        myDirectedGraph.addEdge("A", "B");
+        assertTrue(myDirectedGraph.hasEdge("A", "B"));
+        assertTrue(myDirectedGraph.getNeighbors("A").size() == 1);
+    }
 }

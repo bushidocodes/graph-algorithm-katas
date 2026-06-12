@@ -57,6 +57,30 @@ public class GraphBipartiteTest {
     }
 
     @Test
+    public void oddCycleOfFiveIsNotBipartite() {
+        Graph myUndirectedGraph = new Graph(false);
+        // 5-cycle A-B-C-D-E-A: any odd cycle is non-bipartite, not just triangles.
+        myUndirectedGraph.addEdge("A", "B");
+        myUndirectedGraph.addEdge("B", "C");
+        myUndirectedGraph.addEdge("C", "D");
+        myUndirectedGraph.addEdge("D", "E");
+        myUndirectedGraph.addEdge("E", "A");
+        GraphBipartite bipartiteChecker = new GraphBipartite(myUndirectedGraph);
+        assertFalse(bipartiteChecker.twoColor());
+    }
+
+    @Test
+    public void isolatedVerticesDoNotAffectBipartiteness() {
+        Graph myUndirectedGraph = new Graph(false);
+        myUndirectedGraph.addEdge("A", "B");
+        // Create isolated (degree 0) vertices by adding then removing an edge.
+        myUndirectedGraph.addEdge("X", "Y");
+        myUndirectedGraph.removeEdge("X", "Y");
+        GraphBipartite bipartiteChecker = new GraphBipartite(myUndirectedGraph);
+        assertTrue(bipartiteChecker.twoColor());
+    }
+
+    @Test
     public void testcaseFromDescription() {
         Graph myUndirectedGraph = new Graph(false);
         String edgelist[][] = { { "1", "3" }, { "0", "2" }, { "1", "3" }, { "0", "2" } };

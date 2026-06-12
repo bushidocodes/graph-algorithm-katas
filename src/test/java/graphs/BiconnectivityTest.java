@@ -119,6 +119,22 @@ public class BiconnectivityTest {
     }
 
     @Test
+    public void emptyGraphHasNoArticulationPoints() {
+        Biconnectivity checker = new Biconnectivity(new Graph(false));
+        assertTrue(checker.findArticulationPoints().isEmpty());
+    }
+
+    @Test
+    public void singleEdgeHasNoArticulationPoints() {
+        Graph g = new Graph(false);
+        g.addEdge("A", "B");
+        // Removing either endpoint of a lone edge leaves a single vertex, which
+        // is still connected, so neither endpoint is an articulation point.
+        Biconnectivity checker = new Biconnectivity(g);
+        assertTrue(checker.findArticulationPoints().isEmpty());
+    }
+
+    @Test
     public void nextBfsLevelUnionsSpanningTreeChildrenFromEveryVertexInLevel() {
         Biconnectivity checker = new Biconnectivity(new Graph(false));
         // Hand-wire a spanning tree:  R -> {A, B};  A -> {C};  B -> {D}
