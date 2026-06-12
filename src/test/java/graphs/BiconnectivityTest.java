@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
@@ -115,5 +116,27 @@ public class BiconnectivityTest {
         myUndirectedGraph.addEdge("E", "F");
         Biconnectivity biconnectivityChecker = new Biconnectivity(myUndirectedGraph);
         assertTrue(biconnectivityChecker.findArticulationPoints().isEmpty());
+    }
+
+    @Test
+    public void nextBfsLevelUnionsSpanningTreeChildrenFromEveryVertexInLevel() {
+        Biconnectivity checker = new Biconnectivity(new Graph(false));
+        // Hand-wire a spanning tree:  R -> {A, B};  A -> {C};  B -> {D}
+        checker.spanningTree.put("R", new HashSet<>(Arrays.asList("A", "B")));
+        checker.spanningTree.put("A", new HashSet<>(Arrays.asList("C")));
+        checker.spanningTree.put("B", new HashSet<>(Arrays.asList("D")));
+
+        // A single-vertex frontier expands to that vertex's children.
+        assertEquals(new HashSet<>(Arrays.asList("A", "B")),
+                checker.nextBfsLevel(new HashSet<>(Arrays.asList("R"))));
+
+        // A frontier with MULTIPLE vertices must union ALL of their children.
+        // This multi-source union is exactly what the previous mutable-identity
+        // Stream.reduce could corrupt under parallel evaluation.
+        assertEquals(new HashSet<>(Arrays.asList("C", "D")),
+                checker.nextBfsLevel(new HashSet<>(Arrays.asList("A", "B"))));
+
+        // Leaves (and vertices absent from the spanning tree) expand to nothing.
+        assertTrue(checker.nextBfsLevel(new HashSet<>(Arrays.asList("C", "D"))).isEmpty());
     }
 }

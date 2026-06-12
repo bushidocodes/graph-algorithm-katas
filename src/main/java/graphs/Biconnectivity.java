@@ -103,13 +103,21 @@ public class Biconnectivity {
             if (earliestBackEdgesInCurrent.size() > 0) {
                 result = Collections.min(earliestBackEdgesInCurrent);
             } else {
-                currentLevel = currentLevel.stream()
-                        .filter(v -> this.spanningTree.containsKey(v))
-                        .flatMap(v -> this.spanningTree.get(v).stream())
-                        .collect(Collectors.toCollection(HashSet::new));
+                currentLevel = nextBfsLevel(currentLevel);
             }
         }
         return result;
+    }
+
+    // Expands a BFS frontier to the next level: the union of every current
+    // vertex's spanning-tree children. Built with flatMap/collect rather than a
+    // mutable-identity Stream.reduce so it stays correct under any stream
+    // evaluation (including parallel). Package-private for direct unit testing.
+    HashSet<String> nextBfsLevel(HashSet<String> currentLevel) {
+        return currentLevel.stream()
+                .filter(v -> this.spanningTree.containsKey(v))
+                .flatMap(v -> this.spanningTree.get(v).stream())
+                .collect(Collectors.toCollection(HashSet::new));
     }
 
     // Assumes that the source vertex has a backedge
